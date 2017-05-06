@@ -2,16 +2,19 @@ require "openssl"
 require "digest"
 require "base64"
 
+# https://mp.weixin.qq.com/debug/wxadoc/dev/api/signature.html
 # 解密算法如下:
 # 1)对称解密使用的算法为 AES-128-CBC，数据采用PKCS#7填充。
 # 2)对称解密的目标密文为 Base64_Decode(encryptedData)。
 # 3)对称解密秘钥 aeskey = Base64_Decode(session_key), aeskey 是16字节。
 # 4)对称解密算法初始向量 为Base64_Decode(iv)，其中iv由数据接口返回。
+
+# http://ruby-doc.org/stdlib-2.0.0/libdoc/openssl/rdoc/OpenSSL/Cipher.html
 # decipher = OpenSSL::Cipher::AES.new(128, :CBC)
 # decipher.decrypt
 # decipher.key = key
 # decipher.iv = iv
-# plain = decipher.update(encrypted) + decipher.final
+# decipher.update(encrypted) + decipher.final
 
 class WXBizDataCrypt
   def initialize(appid, session_key)
